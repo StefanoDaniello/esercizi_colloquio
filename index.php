@@ -1,4 +1,3 @@
--- Active: 1730377041341@@localhost@3306
 <!DOCTYPE html>
 <html lang="it">
 

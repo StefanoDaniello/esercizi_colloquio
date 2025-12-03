@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  # 1. Servizio PHP + Apache (Web Server)
+  web:
+    image: php:8.3-apache
+    container_name: miosito_web
+    restart: always
+    # Mappa la cartella corrente (il tuo progetto) all'interno del container
+    volumes:
+      - .:/var/www/html
+    # Espone la porta HTTP
+    ports:
+      - "80:80"
+    # Dipende dal database, in modo che il DB sia avviato per primo
+    depends_on:
+      - db
+
+  # 2. Servizio Database (MySQL Ufficiale)
+  db:
+    image: mysql:latest # IMMAGINE MySQL
+    container_name: db_test
+    restart: always
+    # Variabili d'ambiente per configurare il database MySQL
+    environment:
+      # La password per l'utente root e' necessaria per MySQL
+      MYSQL_ROOT_PASSWORD: password
+      # Crea il database al primo avvio
+      MYSQL_DATABASE: database_di_prova
+    # Espone la porta SQL
+    ports:
+      - "3306:3306"
+
+  # 3. Servizio phpMyAdmin (Interfaccia Grafica del DB)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_test
+    restart: always
+    # Espone phpMyAdmin sulla porta 8080 del tuo computer
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db # Si connette al servizio 'db' (MySQL)
+      MYSQL_ROOT_PASSWORD: password # Usa la stessa password di root per accedere
+    depends_on:
+      - db
